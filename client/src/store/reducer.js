@@ -1,12 +1,33 @@
+import Actions from "./action";
+
 const initState = {
   identity: "",
+  isRoomHost: false,
+  connectOnlyWithAudio: false,
+  roomId: null,
 };
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
-    case "DUMMY_ACTION":
+    case Actions.SET_IS_ROOM_HOST:
       return {
         ...state,
+        isRoomHost: action.isRoomHost,
+      };
+    case Actions.SET_CONNCT_ONLY_WITH_AUDIO:
+      return {
+        ...state,
+        connectOnlyWithAudio: action.onlyWithAudio,
+      };
+    case Actions.SET_ROOM_ID:
+      return {
+        ...state,
+        identity: action.roomId,
+      };
+    case Actions.SET_IDENTITY:
+      return {
+        ...state,
+        identity: action.identity,
       };
     default:
       return state;
