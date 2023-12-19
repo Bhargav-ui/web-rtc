@@ -5,6 +5,7 @@ const initState = {
   isRoomHost: false,
   connectOnlyWithAudio: false,
   roomId: null,
+  showOverlay: true,
 };
 
 const reducer = (state = initState, action) => {
@@ -22,12 +23,17 @@ const reducer = (state = initState, action) => {
     case Actions.SET_ROOM_ID:
       return {
         ...state,
-        identity: action.roomId,
+        roomId: action.roomId,
       };
     case Actions.SET_IDENTITY:
       return {
         ...state,
         identity: action.identity,
+      };
+    case Actions.SET_SHOW_OVERLAY:
+      return {
+        ...state,
+        showOverlay: action.showOverlay,
       };
     default:
       return state;
