@@ -1,5 +1,6 @@
 import React from "react";
 import "../RoomPage.css";
+import { useSelector } from "react-redux";
 const dummyParticipants = [
   {
     identity: "Jake",
@@ -16,7 +17,7 @@ const dummyParticipants = [
 ];
 
 const SingleParticipant = (props) => {
-  const { identity, lastItem, participant } = props;
+  const { identity, lastItem } = props;
 
   return (
     <>
@@ -27,17 +28,17 @@ const SingleParticipant = (props) => {
 };
 
 const Participants = () => {
+  const participants = useSelector((state) => state.reducer.participants);
+
   return (
     <div className="participants_container">
-      {dummyParticipants.map((participant, index) => (
-        <>
-          <SingleParticipant
-            key={participant.identity}
-            lastItem={dummyParticipants.length === index + 1}
-            participant={participant}
-            identity={participant.identity}
-          ></SingleParticipant>
-        </>
+      {participants.map((participant, index) => (
+        <SingleParticipant
+          key={index}
+          lastItem={participants.length === index + 1}
+          participant={participant}
+          identity={participant.identity}
+        />
       ))}
     </div>
   );

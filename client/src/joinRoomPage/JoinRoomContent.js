@@ -5,6 +5,7 @@ import {
   setConnectOnlyWithAudio,
   setIdentity,
   setIsRoomHost,
+  setRoomId,
 } from "../store/action";
 import OnlyWithAudioCheckbox from "./OnlyWithAudioCheckbox";
 import ErrorMessage from "./ErrorMessage";
@@ -33,23 +34,34 @@ const JoinRoomContent = (props) => {
   };
 
   const joinRoom = async () => {
-    let responseMessage;
+    // let responseMessage;
     try {
-      responseMessage = await getRoomExists(roomIdValue);
+      let responseMessage = await getRoomExists(roomIdValue);
+      console.log("responseMessage", responseMessage);
       const { roomExists, full } = responseMessage;
       if (roomExists) {
+        console.log("responseMessage", responseMessage);
+
         if (full) {
+          console.log("responseMessage", responseMessage);
+
           setErrorMessage(`The room ${roomIdValue} is already fully booked.`);
         } else {
+          console.log("responseMessage", responseMessage);
+
           // window.location.href = `http://localhost:3001/chat?id=${roomIdValue}&name=${nameValue}`;
-          dispatch(setRoomIdValue(roomIdValue));
+          // dispatch(setRoomIdValue(roomIdValue));
+          dispatch(setRoomId(roomIdValue));
+
           navigate("/room");
         }
       } else {
         setErrorMessage(`The room "${roomIdValue}" does not exist.`);
       }
     } catch (error) {
-      setErrorMessage("not found");
+      if (error.response) {
+        setErrorMessage("not found");
+      }
     }
   };
 

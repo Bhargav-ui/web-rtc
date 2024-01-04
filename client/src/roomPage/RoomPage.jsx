@@ -29,9 +29,10 @@ const RoomPage = () => {
     <div className="room_container">
       <ParticipantsSection />
       <VideoSection />
-      <ChatSection />
+
       <RoomLabel roomId={roomId} />
       {showOverlay && <Overlay />}
+      <ChatSection />
     </div>
   );
 };
