@@ -1,28 +1,21 @@
 import React, { useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import "./JoinRoomPage.css";
-import { setIsRoomHost } from "./../store/action";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { connect } from "react-redux";
+import { setIsRoomHost } from "../store/actions";
 import JoinRoomTitle from "./JoinRoomTitle";
 import JoinRoomContent from "./JoinRoomContent";
 
-const JoinRoomPage = (props) => {
-  // const { setIsRoomHostAction, isRoomHost } = props;
-  // console.log("params 33", isRoomHost);
-  const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
-  const host = searchParams.get("host");
-  const isRoomHost = useSelector((state) => state.reducer.isRoomHost);
+import "./JoinRoomPage.css";
 
-  console.log("params", host);
+const JoinRoomPage = (props) => {
+  const { setIsRoomHostAction, isRoomHost } = props;
+
+  const search = useLocation().search;
 
   useEffect(() => {
-    const isRoomHost = host;
-
+    const isRoomHost = new URLSearchParams(search).get("host");
     if (isRoomHost) {
-      console.log("params 2", isRoomHost);
-
-      dispatch(setIsRoomHost(true));
+      setIsRoomHostAction(true);
     }
   }, []);
 
@@ -30,23 +23,22 @@ const JoinRoomPage = (props) => {
     <div className="join_room_page_container">
       <div className="join_room_page_panel">
         <JoinRoomTitle isRoomHost={isRoomHost} />
-        <JoinRoomContent isRoomHost={isRoomHost} />
+        <JoinRoomContent />
       </div>
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStoreStateToProps = (state) => {
   return {
     ...state,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapActionsToProps = (dispatch) => {
   return {
     setIsRoomHostAction: (isRoomHost) => dispatch(setIsRoomHost(isRoomHost)),
   };
 };
 
-// export default connect(mapStateToProps, mapDispatchToProps)(JoinRoomPage);
-export default JoinRoomPage;
+export default connect(mapStoreStateToProps, mapActionsToProps)(JoinRoomPage);

@@ -15,13 +15,22 @@ const RoomPage = () => {
   const identity = useSelector((state) => state.reducer.identity);
   const isRoomHost = useSelector((state) => state.reducer.isRoomHost);
   const showOverlay = useSelector((state) => state.reducer.showOverlay);
+  const connectOnlyWithAudio = useSelector(
+    (state) => state.reducer.connectOnlyWithAudio
+  );
 
   useEffect(() => {
-    webRTCHandler.getLocalPreviewAndInitRoomConnection(
-      isRoomHost,
-      identity,
-      roomId
-    );
+    if (!isRoomHost && !roomId) {
+      const siteUrl = window.location.origin;
+      window.location.href = siteUrl;
+    } else {
+      webRTCHandler.getLocalPreviewAndInitRoomConnection(
+        isRoomHost,
+        identity,
+        roomId,
+        connectOnlyWithAudio
+      );
+    }
   }, []);
 
   console.log("showOverlay", showOverlay);

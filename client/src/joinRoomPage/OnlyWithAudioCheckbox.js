@@ -1,30 +1,19 @@
 import React from "react";
-import CheckImg from "../resources/Images/check.png";
-import { useDispatch, useSelector } from "react-redux";
-import { setConnectOnlyWithAudio } from "../store/action";
+import CheckImg from "../resources/images/check.png";
 
-const OnlyWithAudioCheckbox = (
-  {
-    //   setConnectOnlyWithAudio,
-    //   connectOnlyWithAudio,
-  }
-) => {
-  const dispatch = useDispatch();
-  const connectOnlyWithAudio = useSelector(
-    (state) => state.reducer.connectOnlyWithAudio
-  );
-
+const OnlyWithAudioCheckbox = ({
+  connectOnlyWithAudio,
+  setConnectOnlyWithAudio,
+}) => {
   const handleConnectionTypeChange = () => {
-    console.log("abc 1", connectOnlyWithAudio);
-    //change info in our store about connection type
-    // setConnectOnlyWithAudio(!connectOnlyWithAudio);
-    dispatch(setConnectOnlyWithAudio(!connectOnlyWithAudio));
+    setConnectOnlyWithAudio(!connectOnlyWithAudio);
   };
+
   return (
     <div className="checkbox_container">
       <div className="checkbox_connection" onClick={handleConnectionTypeChange}>
         {connectOnlyWithAudio && (
-          <img className="checkbox_image" src={CheckImg} />
+          <img className="checkbox_image" src={CheckImg}></img>
         )}
       </div>
       <p className="checkbox_container_paragraph">Only audio</p>

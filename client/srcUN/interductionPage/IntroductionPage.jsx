@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import "./IntroductionPage.css";
 import logo from "../resources/Images/logo.png";
 import ConnectingButtons from "./ConnectingButtons";
 import { connect } from "react-redux";
 import { setIsRoomHost } from "../store/action";
+import "./IntroductionPage.css";
 
-const InterductionPage = ({ setIsRoomHostAction }) => {
+const IntroductionPage = ({ setIsRoomHostAction }) => {
   useEffect(() => {
     setIsRoomHostAction(false);
   }, []);
@@ -34,4 +34,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(InterductionPage);
+export default connect(null, mapDispatchToProps)(IntroductionPage);

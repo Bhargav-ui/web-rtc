@@ -1,31 +1,34 @@
 import React, { useState } from "react";
 import JoinRoomInputs from "./JoinRoomInputs";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
+import OnlyWithAudioCheckbox from "./OnlyWithAudioCheckbox";
 import {
   setConnectOnlyWithAudio,
   setIdentity,
-  setIsRoomHost,
   setRoomId,
-} from "../store/action";
-import OnlyWithAudioCheckbox from "./OnlyWithAudioCheckbox";
+} from "../store/actions";
 import ErrorMessage from "./ErrorMessage";
 import JoinRoomButtons from "./JoinRoomButtons";
 import { useNavigate } from "react-router-dom";
 import { getRoomExists } from "../utils/api";
 
 const JoinRoomContent = (props) => {
-  // const { isRoomHost, setConnectOnlyWithAudio, connectOnlyWithAudio } = props;
-  const isRoomHost = useSelector((state) => state.reducer.isRoomHost);
+  const {
+    isRoomHost,
+    setConnectOnlyWithAudio,
+    connectOnlyWithAudio,
+    setIdentityAction,
+    setRoomIdAction,
+  } = props;
+
   const [roomIdValue, setRoomIdValue] = useState("");
   const [nameValue, setNameValue] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const history = useNavigate();
 
   const handleJoinRoom = async () => {
-    //joining the room
-    dispatch(setIdentity(nameValue));
-    console.log("joining");
+    setIdentityAction(nameValue);
     if (isRoomHost) {
       createRoom();
     } else {
@@ -34,39 +37,25 @@ const JoinRoomContent = (props) => {
   };
 
   const joinRoom = async () => {
-    // let responseMessage;
-    try {
-      let responseMessage = await getRoomExists(roomIdValue);
-      console.log("responseMessage", responseMessage);
-      const { roomExists, full } = responseMessage;
-      if (roomExists) {
-        console.log("responseMessage", responseMessage);
+    const responseMessage = await getRoomExists(roomIdValue);
 
-        if (full) {
-          console.log("responseMessage", responseMessage);
+    const { roomExists, full } = responseMessage;
 
-          setErrorMessage(`The room ${roomIdValue} is already fully booked.`);
-        } else {
-          console.log("responseMessage", responseMessage);
-
-          // window.location.href = `http://localhost:3001/chat?id=${roomIdValue}&name=${nameValue}`;
-          // dispatch(setRoomIdValue(roomIdValue));
-          dispatch(setRoomId(roomIdValue));
-
-          navigate("/room");
-        }
+    if (roomExists) {
+      if (full) {
+        setErrorMessage("Meeting is full. Please try again later.");
       } else {
-        setErrorMessage(`The room "${roomIdValue}" does not exist.`);
+        // join a room !
+        setRoomIdAction(roomIdValue);
+        history("/room");
       }
-    } catch (error) {
-      if (error.response) {
-        setErrorMessage("not found");
-      }
+    } else {
+      setErrorMessage("Meeting not found. Check your meeting id.");
     }
   };
 
   const createRoom = () => {
-    navigate("/room");
+    history("/room");
   };
 
   return (
@@ -79,8 +68,8 @@ const JoinRoomContent = (props) => {
         isRoomHost={isRoomHost}
       />
       <OnlyWithAudioCheckbox
-      // setConnectOnlyWithAudio={setConnectOnlyWithAudio}
-      // connectOnlyWithAudio={connectOnlyWithAudio}
+        setConnectOnlyWithAudio={setConnectOnlyWithAudio}
+        connectOnlyWithAudio={connectOnlyWithAudio}
       />
       <ErrorMessage errorMessage={errorMessage} />
       <JoinRoomButtons
@@ -91,19 +80,22 @@ const JoinRoomContent = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStoreStateToProps = (state) => {
   return {
     ...state,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapActionsToProps = (dispatch) => {
   return {
     setConnectOnlyWithAudio: (onlyWithAudio) =>
       dispatch(setConnectOnlyWithAudio(onlyWithAudio)),
+    setIdentityAction: (identity) => dispatch(setIdentity(identity)),
+    setRoomIdAction: (roomId) => dispatch(setRoomId(roomId)),
   };
 };
 
-// export default connect(mapStateToProps, mapDispatchToProps)(JoinRoomContent);
-
-export default JoinRoomContent;
+export default connect(
+  mapStoreStateToProps,
+  mapActionsToProps
+)(JoinRoomContent);
